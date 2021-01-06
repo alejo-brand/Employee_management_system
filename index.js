@@ -1,4 +1,5 @@
-const db = require("./db")
+const db = require("./db");
+const inquirer = require ("inquirer");
 
 
 function askForAction(){
@@ -10,6 +11,7 @@ function askForAction(){
             "VIEW_DEPARTMENTS",
             "VIEW_ROLES",
             "VIEW_EMPLOYEES",
+            "CREATE_ROLE",
             "QUIT"
         ]
     })
@@ -19,13 +21,16 @@ function askForAction(){
             viewDepartments();
                 return;
             case "VIEW_ROLES":
+            viewRoles();
 
                 return;
             case "VIEW_EMPLOYEES":
+            viewEmployees();
 
                 return;
             
             case "CREATE_ROLE":
+            createRole();
 
                 return;
 
@@ -40,6 +45,7 @@ function viewDepartments(){
     db.getDepartments()
     .then((results)=>{
         console.table(results);
+
         askForAction();
     });
 
@@ -64,14 +70,44 @@ function viewEmployees(){
 
 
 function createRole(){
+    db.getDepartments()
+    .then((departments)=>{
 
-}
+        inquirer
+            .prompt([
+                {
+                    message:"what department is this role for?",
+                    type:"list",
+                    name:"department_id",
+                    choices:departments.map((department)=>({
+                        value:department.department_id,
+                        name:department.name
+                    }))
+                },
+                {
+                    message:"what is the title of the new role",
+                    type:"input",
+                    name:"title",
+                },
+                {
+                    message:"what is the salary of the new role",
+                    type:"input",
+                    name:"salary",
+                }
+            ])
+            .then((res)=>{
+                console.table(res);
+                askForAction();
+            });
+
+        })
+    }
 
 askForAction();
 
 
 
-db.getDepartments().then((res)=>{
-    console.log(res);
-});
+// db.getDepartments().then((res)=>{
+//     console.log(res);
+// });
 

@@ -29,6 +29,6 @@ CREATE TABLE employee (
     PRIMARY KEY(employee_id),
     FOREIGN KEY (manager_id) REFERENCES employee (employee_id),
     CONSTRAINT fk_role_id
-    FOREIGN KEY (role_id) REFERENCES role(role_id) AUTO_INCREMENT ON DELETE SET NULL
+    FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE SET NULL
 );
 
