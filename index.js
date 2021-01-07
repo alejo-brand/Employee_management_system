@@ -101,13 +101,34 @@ function createRole(){
             });
 
         })
-    }
+    };
+
+function addEmployee(){
+    db.getEmployees()
+    .then((employees)=>{
+        inquirer
+            .prompt([
+                {
+                    message:"what is the employee first name?",
+                    type:"input",
+                    name:"first_name",
+                },
+                {
+                    message:"what is the employee last name?",
+                    type:"input",
+                    name:"last_name",
+
+                },
+                {
+                    message:"what is the role of the employee?",
+                    type:"list",
+                    name:"role_id",
+                    choices:""
+                }
+            ])
+    })
+}
 
 askForAction();
 
-
-
-// db.getDepartments().then((res)=>{
-//     console.log(res);
-// });
 

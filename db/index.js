@@ -22,5 +22,13 @@ module.exports = {
             department_id:data.department_id,
         })
     },
-    
+
+    addEmployee(){
+        return connection.query ('INSERT INTO employee SET ?',{
+            first_name:data.first_name,
+            last_name:data.last_name,
+            role_id:data.role_id,
+            manager_id:data.manager_id
+        })
+    }
 };
