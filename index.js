@@ -1,6 +1,9 @@
 const db = require("./db");
 const inquirer = require ("inquirer");
-
+const {
+    addRole,
+    addEmployee
+} = require("./db");
 
 function askForAction(){
     inquirer.prompt({
@@ -97,7 +100,9 @@ function createRole(){
             ])
             .then((res)=>{
                 console.table(res);
+                addRole(res);
                 askForAction();
+                // await db.addRole(role)
             });
 
         })
