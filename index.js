@@ -2,7 +2,7 @@ const db = require("./db");
 const inquirer = require ("inquirer");
 const {
     addRole,
-    addEmployee
+    addEmployee,
 } = require("./db");
 
 function askForAction(){
@@ -15,6 +15,7 @@ function askForAction(){
             "VIEW_ROLES",
             "VIEW_EMPLOYEES",
             "CREATE_ROLE",
+            "CREATE_EMPLOYEE",
             "QUIT"
         ]
     })
@@ -34,6 +35,10 @@ function askForAction(){
             
             case "CREATE_ROLE":
             createRole();
+
+                return;
+            case "CREATE_EMPLOYEE":
+                addNewEmployee();
 
                 return;
 
@@ -108,31 +113,52 @@ function createRole(){
         })
     };
 
-// function addEmployee(){
-//     db.getEmployees()
-//     .then((employees)=>{
-//         inquirer
-//             .prompt([
-//                 {
-//                     message:"what is the employee first name?",
-//                     type:"input",
-//                     name:"first_name",
-//                 },
-//                 {
-//                     message:"what is the employee last name?",
-//                     type:"input",
-//                     name:"last_name",
+function addNewEmployee(){
+    db.getEmployees()
+    .then((employee)=>{
+      const newEmployee = employee.map((employee)=>({
+          value: employee.id,
+          name: employee.first_name + " "+ employee.last_name,
+      }));  
+    })
 
-//                 },
-//                 {
-//                     message:"what is the role of the employee?",
-//                     type:"list",
-//                     name:"role_id",
-//                     choices:""
-//                 }
-//             ])
-//     })
-// }
+    db.getRoles()
+    .then((role)=>{
+        inquirer
+            .prompt([
+                {
+                    message:"what is the employee first name?",
+                    name:"first_name",
+                    type:"input"
+                },
+                {
+                    message:"what is the employee last name?",
+                    name:"last_name",
+                    type:"input"
+                },
+                {
+                    message:"what is the role of the employee?",
+                    name:"role_id",
+                    type:"list",
+                    choices:role.map((role)=>({
+                        value:role.role_id,
+                        name:role.title,
+                    }))
+                },
+                {
+                    message:"who is the manager of the employee?",
+                    name:"manager_id",
+                    type:"list",
+                    choices:newEmployee,
+                }
+            ])
+            .then((res)=>{
+                addEmployee(res);
+                console.table(res);
+                askForAction();
+            })
+    })
+}
 
 askForAction();
 
