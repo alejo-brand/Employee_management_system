@@ -114,22 +114,20 @@ function createRole(){
     };
 
 function addNewEmployee(){
-    db.getEmployees()
-    .then((employee)=>{
+    db.getEmployees().then((employee)=>{
       const newEmployee = employee.map((employee)=>({
           value: employee.id,
           name: employee.first_name + " "+ employee.last_name,
       }));  
-    })
-
-    db.getRoles()
-    .then((role)=>{
-        inquirer
-            .prompt([
-                {
-                    message:"what is the employee first name?",
-                    name:"first_name",
-                    type:"input"
+      
+      db.getRoles()
+      .then((role)=>{
+          inquirer
+          .prompt([
+              {
+                  message:"what is the employee first name?",
+                  name:"first_name",
+                  type:"input"
                 },
                 {
                     message:"what is the employee last name?",
@@ -157,6 +155,7 @@ function addNewEmployee(){
                 console.table(res);
                 askForAction();
             })
+        })
     })
 }
 
