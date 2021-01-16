@@ -1,8 +1,10 @@
 const db = require("./db");
 const inquirer = require ("inquirer");
+const connection = require("./db/connection"    );
 const {
     addRole,
     addEmployee,
+    addDepartment
 } = require("./db");
 
 function askForAction(){
@@ -16,6 +18,7 @@ function askForAction(){
             "VIEW_EMPLOYEES",
             "CREATE_ROLE",
             "CREATE_EMPLOYEE",
+            "CREATE_DEPARTMENT",
             "QUIT"
         ]
     })
@@ -23,24 +26,27 @@ function askForAction(){
         switch (res.action){
             case "VIEW_DEPARTMENTS":
             viewDepartments();
-                return;
+                break;
             case "VIEW_ROLES":
             viewRoles();
 
-                return;
+                break;
             case "VIEW_EMPLOYEES":
             viewEmployees();
 
-                return;
+                break;
             
             case "CREATE_ROLE":
             createRole();
 
-                return;
+                break;
             case "CREATE_EMPLOYEE":
                 addNewEmployee();
 
-                return;
+                break;
+            case "CREATE_DEPARTMENT":
+                addNewDepartment();
+                break;
 
             default:
                 connection.end();
@@ -156,6 +162,23 @@ function addNewEmployee(){
                 askForAction();
             })
         })
+    })
+}
+
+function addNewDepartment(){
+    inquirer
+    .prompt([
+        {
+            message:"what department do you wish to add",
+            type:"input",
+            name:"name"
+        }
+    ])
+    .then((res)=>{
+        addDepartment(res);
+        console.table(res)
+        askForAction();
+
     })
 }
 
