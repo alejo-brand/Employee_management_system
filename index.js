@@ -4,7 +4,9 @@ const connection = require("./db/connection"    );
 const {
     addRole,
     addEmployee,
-    addDepartment
+    addDepartment,
+    updateRole,
+    removeDepartment
 } = require("./db");
 
 function askForAction(){
@@ -19,6 +21,8 @@ function askForAction(){
             "CREATE_ROLE",
             "CREATE_EMPLOYEE",
             "CREATE_DEPARTMENT",
+            "UPDATE_ROLE",
+            "DELETE_DEPARTMENT",
             "QUIT"
         ]
     })
@@ -46,6 +50,12 @@ function askForAction(){
                 break;
             case "CREATE_DEPARTMENT":
                 addNewDepartment();
+                break;
+            case "UPDATE_ROLE":
+                updateArole();
+                break;
+            case "DELETE_DEPARTMENT":
+                deleteDepartment();
                 break;
 
             default:
@@ -113,10 +123,10 @@ function createRole(){
                 console.table(res);
                 addRole(res);
                 askForAction();
-                // await db.addRole(role)
+
             });
 
-        })
+        });
     };
 
 function addNewEmployee(){
@@ -160,10 +170,10 @@ function addNewEmployee(){
                 addEmployee(res);
                 console.table(res);
                 askForAction();
-            })
-        })
-    })
-}
+            });
+        });
+    });
+};
 
 function addNewDepartment(){
     inquirer
@@ -179,6 +189,65 @@ function addNewDepartment(){
         console.table(res)
         askForAction();
 
+    });
+};
+
+function updateArole(){
+    db.getEmployees().then((employee)=>{
+        const listOfEmployees = employee.map((employee)=>({
+            value:employee.employee_id,
+            name:employee.first_name + " " + employee.last_name,
+        }));
+    db.getRoles().then((role)=>{
+        const listOfRoles = role.map((role)=>({
+            value:role.role_id,
+            name:role.title,
+        }))
+
+        inquirer
+        .prompt([
+            {
+                message:"which employee do you want to update?",
+                type:"list",
+                name:"employee_id",
+                choices:listOfEmployees,
+            },
+            {
+                message:"what is the new role title",
+                type:"list",
+                name:"role_id",
+                choices:listOfRoles
+            }
+        ])
+        .then((res)=>{
+            updateRole(res);
+            console.table(res);
+            askForAction();
+        })  
+    });
+    })
+};
+
+function deleteDepartment(){
+    db.getDepartments().then((departments)=>{
+        inquirer
+        .prompt([
+            {
+                message:"what department do you want to delete",
+                type:"list",
+                name:"department_id",
+                choices:departments.map((department)=>({
+                    value:department.department_id,
+                    name:department.name,
+                }))
+
+            }
+        ])
+        .then((res)=>{
+            removeDepartment(res);
+            console.table(res);
+            askForAction();
+        })
     })
 }
 

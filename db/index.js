@@ -7,7 +7,16 @@ module.exports = {
     },
     getRoles(){
 
-        return connection.query('SELECT * FROM role');
+        return connection.query(
+            `SELECT
+            role.role_id,
+            role.title,
+            role.salary,
+            department.name,
+            department.department_id
+            FROM role
+            LEFT JOIN department on role.department_id = department.department_id`
+        );
     },
     getEmployees(){
 
@@ -60,5 +69,19 @@ module.exports = {
 
     removeDepartment(data){
         return connection.query('DELETE FROM department WHERE ?', data)
+    },
+    
+    updateRole(data){
+        return connection.query(
+            `UPDATE employee SET ? WHERE ?`,
+            [
+                {
+                    role_id:data.role_id,
+                },
+                {
+                    employee_id:data.employee_id,
+                }
+            ]
+        )
     }
 };
