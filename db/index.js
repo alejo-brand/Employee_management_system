@@ -89,5 +89,8 @@ module.exports = {
         return connection.query(
             `DELETE FROM employee WHERE?`,data
         );
+    },
+    removeRole(data){
+        return connection.query("DELETE FROM role WHERE ?",data);
     }
 };
