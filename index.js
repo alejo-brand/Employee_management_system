@@ -6,7 +6,8 @@ const {
     addEmployee,
     addDepartment,
     updateRole,
-    removeDepartment
+    removeDepartment,
+    removeEmployee
 } = require("./db");
 
 function askForAction(){
@@ -23,6 +24,7 @@ function askForAction(){
             "CREATE_DEPARTMENT",
             "UPDATE_ROLE",
             "DELETE_DEPARTMENT",
+            "DELETE_EMPLOYEE",
             "QUIT"
         ]
     })
@@ -57,7 +59,9 @@ function askForAction(){
             case "DELETE_DEPARTMENT":
                 deleteDepartment();
                 break;
-
+            case "DELETE_EMPLOYEE":
+                deleteEmployee();
+                break;
             default:
                 connection.end();
         }
@@ -245,6 +249,29 @@ function deleteDepartment(){
         ])
         .then((res)=>{
             removeDepartment(res);
+            console.table(res);
+            askForAction();
+        });
+    });
+};
+
+function deleteEmployee(){
+    db.getEmployees().then((employee)=>{
+        const listOfEmployees = employee.map((employee)=>({
+            value:employee.employee_id,
+            name:employee.first_name + " " + employee.last_name
+        }));
+        inquirer
+        .prompt([
+            {
+                message:"which employee would you like to delete?",
+                type:"list",
+                name:"employee_id",
+                choices:listOfEmployees
+            }
+        ])
+        .then((res)=>{
+            removeEmployee(res);
             console.table(res);
             askForAction();
         })

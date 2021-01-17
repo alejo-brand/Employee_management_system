@@ -83,5 +83,11 @@ module.exports = {
                 }
             ]
         )
+    },
+
+    removeEmployee(data){
+        return connection.query(
+            `DELETE FROM employee WHERE?`,data
+        );
     }
 };
